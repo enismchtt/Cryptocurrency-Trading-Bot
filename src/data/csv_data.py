@@ -3,7 +3,7 @@ import pandas as pd
 import config
 
 
-def read_csv(coin: str, timeframe: str, col_names: list = ["close"]) -> pd.DataFrame:
+def read_csv(coin: str, timeframe: str, col_names: list = ["log returns"]) -> pd.DataFrame:
     """
     Reads the csv file of a coin and returns it as a pandas DataFrame
 
@@ -22,7 +22,7 @@ def read_csv(coin: str, timeframe: str, col_names: list = ["close"]) -> pd.DataF
         The csv file as a pandas DataFrame, with "date" as index
     """
 
-    df = pd.read_csv(f"{config.coin_dir}/{coin}/{coin}USDT_{timeframe}.csv")
+    df = pd.read_csv(f"{config.data_path}/{coin}/{coin}USDT_{timeframe}.csv")
 
     # Set date as index
     df.set_index("date", inplace=True)
@@ -31,7 +31,7 @@ def read_csv(coin: str, timeframe: str, col_names: list = ["close"]) -> pd.DataF
     return df[col_names]
 
 
-def get_data(coin: str, time_frame: str, data_type: str = "log returns"):
+"""def get_data(coin: str, time_frame: str, data_type: str = "log returns"):
     # Data_type options are "log returns", "returns", "scaled", "close"
     if data_type != "scaled":
         # Returns are not saved as a column and needs to be calculated here
@@ -60,3 +60,4 @@ def get_data(coin: str, time_frame: str, data_type: str = "log returns"):
 
             data.append(pd.concat([train, test], axis=0))
         return data
+"""
