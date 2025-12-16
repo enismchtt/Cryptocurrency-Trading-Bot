@@ -1,129 +1,85 @@
 import numpy as np
 import pandas as pd
+import pandas_ta_classic as ta  # Use the classic version you installed
 from binance.client import Client
-
 import config
 
-# Initialize the Client
+# Initialize Client
 client = Client()
-
 
 def fetchData(symbol="BTC", amount=1, timeframe="1d", as_csv=False, file_name=None):
     """
-    Pandas DataFrame with the latest OHLCV data from Binance.
-
-    Parameters
-    --------------
-    symbol : string, combine the coin you want to get with the pair. For instance "BTC" for BTC/USDT.
-    amount : int, the amount of rows that should be returned divided by 1000. For instance 2 will return 1000 rows.
-    timeframe : string, the timeframe according to the Binance API. For instance "4h" for the 4 hour candles.
-    All the timeframe options are: '1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1M'
+    Fetches OHLCV data from Binance and adds simplified technical indicators.
+    Returns: Pandas DataFrame with Date, OHLCV, Returns, and 4 Key Indicators.
     """
-    # https://python-binance.readthedocs.io/en/latest/binance.html#binance.client.Client.get_klines
+    
+    # 1. Simplified Timeframe Logic
+    tf_ms = {
+        '1m': 60000, '3m': 180000, '5m': 300000, '15m': 900000, '30m': 1800000,
+        '1h': 3600000, '2h': 7200000, '4h': 14400000, '6h': 21600000, '8h': 28800000,
+        '12h': 43200000, '1d': 86400000, '3d': 259200000, '1w': 604800000, '1M': 2629800000
+    }
+    
+    if timeframe not in tf_ms:
+        print(f"Error: {timeframe} is an invalid timeframe.")
+        return None
 
-    # ms calculations based on: http://convertlive.com/nl/u/converteren/minuten/naar/milliseconden
-    # 1m = 60000 ms
-    if timeframe == "1m":
-        diff = 60000
-    elif timeframe == "3m":
-        diff = 3 * 60000
-    elif timeframe == "5m":
-        diff = 5 * 60000
-    elif timeframe == "15m":
-        diff = 15 * 60000
-    elif timeframe == "30m":
-        diff = 30 * 60000
-
-    # 1h = 3600000 ms
-    elif timeframe == "1h":
-        diff = 3600000
-    elif timeframe == "2h":
-        diff = 2 * 3600000
-    elif timeframe == "4h":
-        diff = 4 * 3600000
-    elif timeframe == "6h":
-        diff = 6 * 3600000
-    elif timeframe == "8h":
-        diff = 8 * 3600000
-    elif timeframe == "12h":
-        diff = 12 * 3600000
-
-    # 1d = 86400000 ms
-    elif timeframe == "1d":
-        diff = 86400000
-    elif timeframe == "3d":
-        diff = 3 * 86400000
-    elif timeframe == "1W":
-        diff = 604800000
-    elif timeframe == "1M":
-        diff = 2629800000
-
-    else:
-        print(f"{timeframe} is an invalid timeframe")
-        return
-
-    # Add USDT to the symbol
     full_symbol = symbol + "USDT"
-
-    # Get current time, by getting the latest candle
-    candleList = client.get_klines(symbol=full_symbol, limit=1000, interval=timeframe)
-
+    
+    # 2. Fetch Data
+    candles = client.get_klines(symbol=full_symbol, limit=1000, interval=timeframe)
+    
     if amount > 1:
-        end = candleList[-1][0]
-        # Get the amount of data specified by amount parameter
+        end_ts = candles[0][0]
         for _ in range(amount):
-            # Make the list from oldest to newest
-            candleList = (
-                client.get_klines(
-                    symbol=full_symbol, limit=1000, interval=timeframe, endTime=end
-                )
-                + candleList
-            )
+            prev_batch = client.get_klines(symbol=full_symbol, limit=1000, interval=timeframe, endTime=end_ts)
+            candles = prev_batch + candles
+            end_ts = prev_batch[0][0]
 
-            # Calculate the end point by using the difference in ms per candle
-            end = end - diff * 1000
+    # 3. Create DataFrame
+    df = pd.DataFrame(candles)
+    df = df.iloc[:, :6] 
+    df.columns = ["date", "open", "high", "low", "close", "volume"]
 
-    df = pd.DataFrame(candleList)
-
-    # Rename columns
-    # https://python-binance.readthedocs.io/en/latest/binance.html#binance.client.Client.get_klines
-    new_columns = [
-        "date",
-        "open",
-        "high",
-        "low",
-        "close",
-        "volume",
-        "close_time",
-        "quote_asset_volume",
-        "number_of_trades",
-        "taker_buy_base_asset_volume",
-        "taker_buy_quote_asset_volume",
-        "ignore",
-    ]
-
-    df.columns = new_columns
-
-    # Convert time in ms to datetime
     df["date"] = pd.to_datetime(df["date"], unit="ms")
+    cols = ["open", "high", "low", "close", "volume"]
+    df[cols] = df[cols].apply(pd.to_numeric)
 
-    # The default values are string, so convert these to numeric values
-    df["open"] = pd.to_numeric(df["open"])
-    df["high"] = pd.to_numeric(df["high"])
-    df["low"] = pd.to_numeric(df["low"])
-    df["close"] = pd.to_numeric(df["close"])
-    df["volume"] = pd.to_numeric(df["volume"])
-    df["usdt_vol"] = df["volume"] * df["close"]
+    # 4. Calculate Custom Metrics
+    df["log_ret_close"] = np.log(df["close"]).diff()
+    df["log_ret_vol"] = np.log(df["volume"].replace(0, np.nan)).diff()
+    df["volatility"] = df["log_ret_close"].rolling(window=7).std() * np.sqrt(7)
 
-    # Calculate log returns and volatility
-    df["log returns"] = np.log(df["close"]).diff().dropna()
-    df["volatility"] = df["log returns"].rolling(window=30).std() * np.sqrt(30)
+    # 5. Technical Indicators (Simplified for Model Input)
+    # We purposefully do NOT use append=True here so we can grab specific columns.
+
+    # A. RSI (14) -> Standard 0-100 scale
+    df['rsi'] = df.ta.rsi(length=14)
+
+    # B. MACD (12, 26, 9) -> We extract ONLY the Histogram (MACDh)
+    # This represents momentum (positive = bullish, negative = bearish)
+    macd_full = df.ta.macd(fast=12, slow=26, signal=9)
+    df['macd'] = macd_full['MACDh_12_26_9']
+
+    # C. Bollinger Bands (20, 2) -> We extract ONLY Percent B (BBP)
+    # 0.0 = Price at Lower Band, 0.5 = Middle, 1.0 = Upper Band
+    bb_full = df.ta.bbands(length=20, std=2)
+    df['bollinger_bands'] = bb_full['BBP_20_2.0']
+
+    # D. ATR (14) -> Standard Volatility
+    df['atr'] = df.ta.atr(length=14)
+
+    # 6. Final Cleanup
+    # This drops the first ~33 rows needed for MACD/Bollinger warm-up
+    df.dropna(inplace=True)
 
     if as_csv:
-        if file_name == None:
-            file_name = full_symbol + "_" + timeframe + ".csv"
-
-        df.to_csv(f"{config.data_path}/{symbol}/{file_name}", index=False)
-        print(f"Succesfully saved {len(df)} rows to {file_name}")
+        if file_name is None:
+            file_name = f"{full_symbol}_{timeframe}.csv"
+        try:
+            df.to_csv(f"{config.data_path}/{symbol}/{file_name}", index=False)
+            print(f"Successfully saved {len(df)} rows to {file_name}")
+        except Exception as e:
+            print(f"Error saving CSV: {e}")
 
     return df

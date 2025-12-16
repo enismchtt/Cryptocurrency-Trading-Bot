@@ -22,7 +22,7 @@ def format_TOTAL():
     Then adds logarithmic returns and the volatility of it
     """
 
-    for time, btc_time in [("1", "1m"), ("15", "15m"), ("240", "4h"), ("1D", "1d")]:
+    for time, btc_time in [("1", "1m"), ("15",     "15m"), ("240", "4h"), ("1D", "1d")]:
         df = pd.read_csv(f"data/coins/TOTAL/CRYPTOCAP_TOTAL, {time}.csv")
 
         df["date"] = pd.to_datetime(df["time"], unit="s")

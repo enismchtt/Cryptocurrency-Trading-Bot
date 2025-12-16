@@ -21,7 +21,7 @@ if __name__ == "__main__" :
         for coin in config.coins_to_fetch :
             forecast_model(model_name="LSTM" , forecast_type=config.pred, coin=coin , time_frame="1d")
     
-    get_rmse_scores()
+    #get_rmse_scores()
 
 
 
