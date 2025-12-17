@@ -1,0 +1,33 @@
+activation: ReLU
+dropout: 0.2
+future_cov_dim: 0
+hidden_dim: 64
+input_chunk_length: 14
+input_size: 6
+likelihood: null
+lr_scheduler_cls: null
+lr_scheduler_kwargs: null
+name: LSTM
+nr_params: 1
+num_layers: 1
+num_layers_out_fc: []
+optimizer_cls: !!python/name:torch.optim.adam.Adam ''
+optimizer_kwargs:
+  lr: 0.001
+output_chunk_length: 1
+output_chunk_shift: 0
+target_size: 1
+train_sample_shape:
+- !!python/tuple
+  - 14
+  - 1
+- !!python/tuple
+  - 14
+  - 5
+- null
+- null
+- null
+- !!python/tuple
+  - 1
+  - 1
+use_reversible_instance_norm: false

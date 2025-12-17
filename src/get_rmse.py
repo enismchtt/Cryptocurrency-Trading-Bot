@@ -79,10 +79,8 @@ def get_predictions(
 
     Parameters
     ----------
-    model_dir : str
-        Options are: "models" or "raw_models"
     forecasting_model : str
-        Options are the models that were trained, for instance "ARIMA"
+        Options are the models that were trained, for instance 
     coin : str
         This can be any of the 21 coins that were trained on
     time_frame : str
