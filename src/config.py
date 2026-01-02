@@ -1,6 +1,6 @@
 # Running config
 
-data_path = "new_dataset"
+data_path = "latest_dataset"
 
 coins_to_fetch = ["BTC","ETH"]
 

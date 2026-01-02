@@ -10,6 +10,9 @@ from calc_rmse import evaluate_all_models
 
 if __name__ == "__main__" :
 
+
+    print("main runned.")
+
     if not config.data_path == "new_dataset" : 
         # fetches current dataset
         for coin in config.coins_to_fetch :
@@ -38,7 +41,7 @@ if __name__ == "__main__" :
     
 
 
-    evaluate_all_models()
+    #evaluate_all_models()
     #get_rmse_scores()
 
 

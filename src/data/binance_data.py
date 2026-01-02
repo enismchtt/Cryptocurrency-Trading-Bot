@@ -26,6 +26,9 @@ def fetchData(symbol="BTC", amount=1, timeframe="1d", as_csv=False, file_name=No
 
     full_symbol = symbol + "USDT"
     
+
+    print("fetch data executed")
+
     # 2. Fetch Data
     candles = client.get_klines(symbol=full_symbol, limit=1000, interval=timeframe)
     
@@ -48,7 +51,8 @@ def fetchData(symbol="BTC", amount=1, timeframe="1d", as_csv=False, file_name=No
     # 4. Calculate Custom Metrics
     df["log_ret_close"] = np.log(df["close"]).diff()
     df["log_ret_vol"] = np.log(df["volume"].replace(0, np.nan)).diff()
-    df["volatility"] = df["log_ret_close"].rolling(window=7).std() * np.sqrt(7)
+    # Today's volume divided by the average of the PREVIOUS 7 days
+    df["volatility"] = df["volume"] / df["volume"].shift(1).rolling(window=7).mean()
 
     # 5. Technical Indicators (Simplified for Model Input)
     # We purposefully do NOT use append=True here so we can grab specific columns.
