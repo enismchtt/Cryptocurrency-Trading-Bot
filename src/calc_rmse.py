@@ -6,10 +6,10 @@ from tqdm import tqdm
 import config  # Ensure this points to your config file
 import numpy as np
 
-def evaluate_all_models():
+def evaluate_all_models(modelname="LSTM"):
     # 1. FIX: Point to the main 'model_predictions' folder
     # We scan from here because 'input_...' folders are now at the top level
-    base_dir = f"{config.output_path}/model_predictions/XGBOOST" 
+    base_dir = f"{config.output_path}/model_predictions/{modelname}" 
     
     results = []
     

@@ -27,7 +27,7 @@ def fetchData(symbol="BTC", amount=1, timeframe="1d", as_csv=False, file_name=No
     full_symbol = symbol + "USDT"
     
 
-    print("fetch data executed")
+
 
     # 2. Fetch Data
     candles = client.get_klines(symbol=full_symbol, limit=1000, interval=timeframe)
@@ -52,6 +52,8 @@ def fetchData(symbol="BTC", amount=1, timeframe="1d", as_csv=False, file_name=No
     df["log_ret_close"] = np.log(df["close"]).diff()
     df["log_ret_vol"] = np.log(df["volume"].replace(0, np.nan)).diff()
     # Today's volume divided by the average of the PREVIOUS 7 days
+    # first calculation done on 8th day day8 /  mean(1-2-3-4 5-6-7) 
+
     df["volatility"] = df["volume"] / df["volume"].shift(1).rolling(window=7).mean()
 
     # 5. Technical Indicators (Simplified for Model Input)

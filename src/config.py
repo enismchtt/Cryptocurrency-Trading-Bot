@@ -1,6 +1,6 @@
 # Running config
 
-data_path = "latest_dataset"
+data_path = "latest_dataset_26.03.26"
 
 coins_to_fetch = ["BTC","ETH"]
 
@@ -10,11 +10,11 @@ input_types = ['log_ret_vol', 'volatility', 'rsi', 'macd', 'bollinger_bands', 'a
 
 pred = "log_ret_close"
 
-output_path = "new_output"
+output_path = "output_dataset_26.03.26"
 rmse_dir = f"{output_path}/rmse"
 model_output_dir = f"{output_path}/model_predictions"
 
-model_name = "XGBOOST"
+model_name = "LSTM"
 
 
 # FORECAST

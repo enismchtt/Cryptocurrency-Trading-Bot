@@ -3,18 +3,18 @@ import config
 import os
 import itertools
 from forecast import forecast_model
-#from get_rmse import get_rmse_scores
 from calc_rmse import evaluate_all_models
+
 
 
 
 if __name__ == "__main__" :
 
 
-    print("main runned.")
 
-    if not config.data_path == "new_dataset" : 
+    if not os.path.exists(config.data_path): # use dataset naming with date for ex:  13.03.26
         # fetches current dataset
+        os.makedirs(config.data_path)
         for coin in config.coins_to_fetch :
             for timeframe in config.time_frames:
                 
@@ -24,25 +24,27 @@ if __name__ == "__main__" :
 
     # The feature that MUST be in every list
   
-    """all_combinations = []
+    all_combinations = []
 
     # Generate combinations of length 0 up to length 6
-    for r in range(len(config.input_types) + 1):
-        # itertools.combinations returns tuples, so we convert to list
+    """for r in range(len(config.input_types) + 1):
         for combo in itertools.combinations(config.input_types, r):
             # Combine the optional parts with the mandatory part
             full_combo = list(combo) + [config.pred]
             all_combinations.append(full_combo)
 
+    for combo in all_combinations:
+        print(combo)"""
 
-    # dataset path is baseline_dataset
+
+    """# dataset path is baseline_dataset
     for coin in config.coins_to_fetch :
-        forecast_model(input_combinations=all_combinations,model_name="XGBOOST",forecast_type=config.pred, coin=coin , time_frame="1d")"""
-    
+        forecast_model(input_combinations=all_combinations,model_name="LSTM",forecast_type=config.pred, coin=coin , time_frame="1d")
+    """
 
 
-    #evaluate_all_models()
-    #get_rmse_scores()
+    evaluate_all_models()
+
 
 
 
