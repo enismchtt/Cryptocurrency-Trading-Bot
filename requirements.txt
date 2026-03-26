@@ -1,0 +1,12 @@
+# Recommended runtime: Python 3.11 or 3.12
+# Python 3.13 may fail with native ML wheels (torch/darts/xgboost).
+
+pandas
+numpy
+matplotlib
+tqdm
+python-binance
+pandas-ta-classic
+darts[torch]
+xgboost
+statsforecast
