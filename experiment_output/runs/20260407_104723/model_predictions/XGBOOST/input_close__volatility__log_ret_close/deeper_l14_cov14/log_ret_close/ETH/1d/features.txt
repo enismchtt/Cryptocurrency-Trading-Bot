@@ -1,0 +1,1 @@
+['close', 'volatility', 'log_ret_close']

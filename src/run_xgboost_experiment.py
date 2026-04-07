@@ -32,7 +32,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--feature-pool",
         nargs="+",
-        default=["log_ret_vol", "volatility", "rsi", "macd", "bollinger_bands", "atr"],
+        default=[
+            "open",
+            "high",
+            "low",
+            "close",
+            "log_ret_vol",
+            "volatility",
+            "rsi",
+            "macd",
+            "bollinger_bands",
+            "atr",
+        ],
     )
     parser.add_argument("--max-optional-features", type=int, default=3)
     parser.add_argument("--test-percentage", type=float, default=0.25)

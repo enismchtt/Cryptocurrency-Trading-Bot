@@ -1,0 +1,1 @@
+['high', 'volatility', 'log_ret_close']

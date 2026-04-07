@@ -1,0 +1,1 @@
+['close', 'rsi', 'macd', 'log_ret_close']

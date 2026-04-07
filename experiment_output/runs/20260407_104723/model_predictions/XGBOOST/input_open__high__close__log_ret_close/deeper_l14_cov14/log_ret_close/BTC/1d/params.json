@@ -1,0 +1,11 @@
+{
+  "run_tag": "deeper_l14_cov14",
+  "lags": 14,
+  "cov_lags": 14,
+  "max_depth": 6,
+  "max_leaves": 16,
+  "min_child_weight": 5,
+  "subsample": 0.9,
+  "colsample_bytree": 0.9,
+  "gamma": 0.01
+}

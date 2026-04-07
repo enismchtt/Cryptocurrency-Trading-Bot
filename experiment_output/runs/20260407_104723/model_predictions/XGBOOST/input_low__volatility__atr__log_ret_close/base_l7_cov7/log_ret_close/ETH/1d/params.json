@@ -1,0 +1,11 @@
+{
+  "run_tag": "base_l7_cov7",
+  "lags": 7,
+  "cov_lags": 7,
+  "max_depth": 4,
+  "max_leaves": 10,
+  "min_child_weight": 7,
+  "subsample": 0.89,
+  "colsample_bytree": 0.93,
+  "gamma": 0.005
+}

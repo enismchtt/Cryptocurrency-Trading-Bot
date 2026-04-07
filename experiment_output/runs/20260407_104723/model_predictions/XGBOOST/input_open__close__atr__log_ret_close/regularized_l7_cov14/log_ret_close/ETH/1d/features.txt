@@ -1,0 +1,1 @@
+['open', 'close', 'atr', 'log_ret_close']

@@ -1,0 +1,1 @@
+['open', 'close', 'macd', 'log_ret_close']

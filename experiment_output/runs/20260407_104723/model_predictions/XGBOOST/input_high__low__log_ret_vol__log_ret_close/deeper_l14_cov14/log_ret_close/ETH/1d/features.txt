@@ -1,0 +1,1 @@
+['high', 'low', 'log_ret_vol', 'log_ret_close']
