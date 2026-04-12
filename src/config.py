@@ -1,6 +1,6 @@
 # Running config
 
-data_path = "latest_dataset_26.03.26"
+data_path = "paper_dataset"
 
 coins_to_fetch = ["BTC","ETH"]
 
@@ -10,7 +10,7 @@ input_types = ['log_ret_vol', 'volatility', 'rsi', 'macd', 'bollinger_bands', 'a
 
 pred = "log_ret_close"
 
-output_path = "output_dataset_26.03.26"
+output_path = "paper_output"
 rmse_dir = f"{output_path}/rmse"
 model_output_dir = f"{output_path}/model_predictions"
 

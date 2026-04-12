@@ -27,20 +27,20 @@ if __name__ == "__main__" :
     all_combinations = []
 
     # Generate combinations of length 0 up to length 6
-    """for r in range(len(config.input_types) + 1):
+    for r in range(len(config.input_types) + 1):
         for combo in itertools.combinations(config.input_types, r):
             # Combine the optional parts with the mandatory part
             full_combo = list(combo) + [config.pred]
             all_combinations.append(full_combo)
 
     for combo in all_combinations:
-        print(combo)"""
+        print(combo)
 
 
-    """# dataset path is baseline_dataset
+    # dataset path is baseline_dataset
     for coin in config.coins_to_fetch :
         forecast_model(input_combinations=all_combinations,model_name="LSTM",forecast_type=config.pred, coin=coin , time_frame="1d")
-    """
+    
 
 
     evaluate_all_models()
