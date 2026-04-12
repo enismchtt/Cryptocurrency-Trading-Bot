@@ -7,7 +7,7 @@ import config
 # Initialize Client
 client = Client()
 
-def fetchData(symbol="BTC", amount=1, timeframe="1d", as_csv=False, file_name=None):
+def fetchData(symbol="BTC", paperSet = False , timeframe="1d", as_csv=False, file_name=None):
     """
     Fetches OHLCV data from Binance and adds simplified technical indicators.
     Returns: Pandas DataFrame with Date, OHLCV, Returns, and 4 Key Indicators.
@@ -25,19 +25,27 @@ def fetchData(symbol="BTC", amount=1, timeframe="1d", as_csv=False, file_name=No
         return None
 
     full_symbol = symbol + "USDT"
-    
 
+    start_date = None
+    if paperSet:
+        if timeframe == "1d":
+            start_date = "2020-07-20 00:00:00 UTC"
+        elif timeframe == "4h":
+            start_date = "2022-10-30 16:00:00 UTC"
+        elif timeframe == "15m":
+            start_date = "2023-04-04 19:00:00 UTC"
+        elif timeframe == "1m":
+            start_date =  "2023-04-14 12:07:00 UTC"
 
 
     # 2. Fetch Data
-    candles = client.get_klines(symbol=full_symbol, limit=1000, interval=timeframe)
-    
-    if amount > 1:
-        end_ts = candles[0][0]
-        for _ in range(amount):
-            prev_batch = client.get_klines(symbol=full_symbol, limit=1000, interval=timeframe, endTime=end_ts)
-            candles = prev_batch + candles
-            end_ts = prev_batch[0][0]
+    if start_date:
+        print("Fetching data from Binance API with start date:", start_date)
+        candles = client.get_historical_klines(symbol=full_symbol, interval=timeframe, start_str=start_date, limit=1000)
+
+    else:
+        candles = client.get_klines(symbol=full_symbol, limit=1000, interval=timeframe)
+
 
     # 3. Create DataFrame
     df = pd.DataFrame(candles)

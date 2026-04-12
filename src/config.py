@@ -1,10 +1,12 @@
 # Running config
 
-data_path = "paper_dataset"
+data_path = "paper_dataset_adjusted"
 
 coins_to_fetch = ["BTC","ETH"]
 
 time_frames = ["1d"]
+
+isPaperSet = True
 
 input_types = ['log_ret_vol', 'volatility', 'rsi', 'macd', 'bollinger_bands', 'atr']
 

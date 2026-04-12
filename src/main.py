@@ -12,14 +12,14 @@ if __name__ == "__main__" :
 
 
 
-    if not os.path.exists(config.data_path): # use dataset naming with date for ex:  13.03.26
+    if not os.path.exists(config.data_path):
         # fetches current dataset
         os.makedirs(config.data_path)
         for coin in config.coins_to_fetch :
             for timeframe in config.time_frames:
                 
                 os.makedirs(f"{config.data_path}/{coin}",exist_ok=True)
-                fetchData(symbol=coin, timeframe=timeframe , as_csv=True)
+                fetchData(symbol=coin, paperSet=config.isPaperSet,timeframe=timeframe , as_csv=True)
 
 
     # The feature that MUST be in every list
@@ -33,16 +33,13 @@ if __name__ == "__main__" :
             full_combo = list(combo) + [config.pred]
             all_combinations.append(full_combo)
 
-    for combo in all_combinations:
-        print(combo)
 
-
-    # dataset path is baseline_dataset
+    # generates all pred - actual values with forecasting 
     for coin in config.coins_to_fetch :
         forecast_model(input_combinations=all_combinations,model_name="LSTM",forecast_type=config.pred, coin=coin , time_frame="1d")
     
 
-
+    # from generations on prev. step calculates rmse 
     evaluate_all_models()
 
 
