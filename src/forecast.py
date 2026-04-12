@@ -74,6 +74,7 @@ def get_model(model_type,forecasting_model_name, coin, time_frame , lags_past_co
             subsample=0.89,
             # 3. Settings
             random_state=42,
+            n_jobs=1
             # XGBoost doesn't use Tensorboard or Checkpoints folder the same way
         )
 

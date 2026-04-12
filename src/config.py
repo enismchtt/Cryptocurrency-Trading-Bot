@@ -16,7 +16,7 @@ output_path = "paper_output"
 rmse_dir = f"{output_path}/rmse"
 model_output_dir = f"{output_path}/model_predictions"
 
-model_name = "LSTM"
+model_name = "XGBOOST"
 
 
 # FORECAST

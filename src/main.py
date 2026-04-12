@@ -36,11 +36,11 @@ if __name__ == "__main__" :
 
     # generates all pred - actual values with forecasting 
     for coin in config.coins_to_fetch :
-        forecast_model(input_combinations=all_combinations,model_name="LSTM",forecast_type=config.pred, coin=coin , time_frame="1d")
+        forecast_model(input_combinations=all_combinations,model_name=config.model_name,forecast_type=config.pred, coin=coin , time_frame="1d")
     
 
     # from generations on prev. step calculates rmse 
-    evaluate_all_models()
+    evaluate_all_models(modelname=config.model_name)
 
 
 
