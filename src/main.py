@@ -17,31 +17,41 @@ if __name__ == "__main__" :
         os.makedirs(config.data_path)
         for coin in config.coins_to_fetch :
             for timeframe in config.time_frames:
-                
                 os.makedirs(f"{config.data_path}/{coin}",exist_ok=True)
                 fetchData(symbol=coin, paperSet=config.isPaperSet,timeframe=timeframe , as_csv=True)
 
 
-    # The feature that MUST be in every list
-  
-    all_combinations = []
+        # The feature that MUST be in every list
+    
+    """all_combinations = []
 
     # Generate combinations of length 0 up to length 6
     for r in range(len(config.input_types) + 1):
         for combo in itertools.combinations(config.input_types, r):
             # Combine the optional parts with the mandatory part
             full_combo = list(combo) + [config.pred]
-            all_combinations.append(full_combo)
+            all_combinations.append(full_combo)"""
 
-
+    
     # generates all pred - actual values with forecasting 
     for coin in config.coins_to_fetch :
+<<<<<<< Updated upstream
         forecast_model(input_combinations=all_combinations,model_name="LSTM",forecast_type=config.pred, coin=coin , time_frame="1d")
     
 
     # from generations on prev. step calculates rmse 
     evaluate_all_models()
 
+=======
+        for time in config.time_frames:
+            forecast_model(input_combinations=config.selected_feature_combinations,model_name=config.model_name,forecast_type=config.pred, coin=coin , time_frame=time)
+
+    
+
+    # from generations on prev. step calculates rmse 
+    evaluate_all_models(modelname=config.model_name)
+    
+>>>>>>> Stashed changes
 
 
 

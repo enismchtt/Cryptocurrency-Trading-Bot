@@ -1,1 +1,0 @@
-['volatility', 'macd', 'bollinger_bands', 'log_ret_close']
